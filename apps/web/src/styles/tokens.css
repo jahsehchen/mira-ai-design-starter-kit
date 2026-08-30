@@ -1,0 +1,107 @@
+/* =========================================================
+   MIRA·弥画 设计令牌 v3.0-sciui（唯一令牌来源）
+   星际太空风：深蓝黑 × 金色点光源 · WCAG 2.1 AA
+   红线：禁止硬编码色值；组件/页面一律引用本文件变量。
+   @deprecated 旧 accent 墨蓝令牌保留至 QA 确认零引用后删除
+
+   —— keyframe 渐变色白名单（契约 §6.2）——
+   #1E2946 : .shimmer 中间色（elevated 亮一档），见 global.css
+   #151D33 : .skeleton shimmer 中间色，见 components.css
+   ========================================================= */
+:root {
+  /* —— 深空背景 5 级（杜绝纯黑，层叠靠色阶差） —— */
+  --color-bg-deep:#070A14;          /* Hero 渐变底 / 页面最深层锚点 */
+  --color-bg-page:#0A0E1A;          /* 页面主背景 */
+  --color-bg-surface:#0F1526;       /* 次级区块 / 分区底 */
+  --color-bg-elevated:#151D33;      /* 卡片 / 浮层 / 输入框 */
+  --color-bg-glass:rgba(10,14,26,.72);      /* 顶栏/Tab/侧栏玻璃底，配 blur(14px) */
+  --color-bg-glass-solid:#0D1322;   /* backdrop-filter 不可用时的实色后备 */
+
+  /* —— 前景/文字色阶 —— */
+  --color-text-display:#EFF3FA;     /* 超大展示标题（≈17.3:1 on page） */
+  --color-text-primary:#C7CFE0;     /* 标题、正文（≈12.3:1） */
+  --color-text-secondary:#8B96B5;   /* 次级说明、元信息（≈6.5:1 ✓） */
+  --color-text-tertiary:#5A6585;    /* 占位符、弱提示（≈3.3:1，仅装饰） */
+  --color-text-disabled:#3A4562;    /* 禁用态文字（≈2.0:1，仅禁用） */
+
+  /* —— 主强调 · 金色（唯一 CTA 色） —— */
+  --color-gold-300:#F1D989;         /* 亮金：高亮点缀 / 星点 */
+  --color-gold-400:#E8C766;         /* 亮金：激活态文字 / 链接文字 / 星点高光 */
+  --color-gold-500:#D4AF37;         /* 经典金：CTA 底、激活底、价格高亮 */
+  --color-gold-600:#B8932B;         /* 暗金：active 按压态底 */
+  --color-on-gold:#0A0E1A;          /* ★ 金底上的文字/图标一律深蓝黑（9.16:1） */
+
+  /* —— 辅助 · 星云色（仅装饰，禁止作 CTA/链接/激活业务语义） —— */
+  --color-nebula-cyan:#5FC9E8;      /* 星云渐变高光 / 成功图标可借用 */
+  --color-nebula-violet:#8B7CF8;    /* 星云渐变第二色 / 生成器氛围光 */
+  --color-nebula-cyan-dim:rgba(95,201,232,.14);   /* 选中 tint 底 */
+  --color-nebula-violet-dim:rgba(139,124,248,.12);/* hover tint 底 */
+
+  /* —— 语义色（深色适配：亮色文字 + 低透明 tint 底） —— */
+  --color-success-text:#3FD08C; --color-success-bg:rgba(63,208,140,.12);
+  --color-warning-text:#E0A548; --color-warning-bg:rgba(224,165,72,.12);
+  --color-danger-text:#F2706B;  --color-danger-bg:rgba(242,112,107,.14);
+  --color-info-text:#E8C766;    --color-info-bg:rgba(232,199,102,.10);
+  --color-on-success:#0A0E1A;   /* 实底 success 上的文字/勾 */
+  --color-on-warning:#0A0E1A;   /* 实底 warning 上的文字 */
+  --color-on-danger:#0A0E1A;    /* 实底 danger 上的文字（6.70:1） */
+
+  /* —— 描边（半透明白，替代暖灰） —— */
+  --color-border-subtle:rgba(255,255,255,.08);
+  --color-border-default:rgba(255,255,255,.14);
+  --color-border-strong:rgba(255,255,255,.24);
+
+  /* —— 发光（深色上黑投影不可见 → 改「光」；克制：仅焦点/主操作） —— */
+  --glow-gold-xs:0 0 8px rgba(212,175,55,.12);
+  --glow-gold-sm:0 0 12px rgba(212,175,55,.18);
+  --glow-gold-md:0 0 20px rgba(212,175,55,.30);   /* 金色 CTA hover */
+  --glow-soft:0 8px 24px rgba(0,0,0,.45);          /* 浮层暗影（层级，非炫技） */
+
+  /* 旧 shadow 更名换值（保留名，防残留引用仍成立） */
+  --shadow-raised:0 1px 2px rgba(0,0,0,.30);
+  --shadow-floating:0 8px 24px rgba(0,0,0,.40);
+  --shadow-overlay:0 16px 48px rgba(0,0,0,.55);
+
+  /* —— 星云渐变（纯 CSS，零图片资源） —— */
+  --gradient-nebula:
+    radial-gradient(52% 46% at 22% 16%, rgba(139,124,248,.16), transparent 62%),
+    radial-gradient(46% 42% at 78% 28%, rgba(95,201,232,.12), transparent 60%),
+    radial-gradient(60% 52% at 50% 90%, rgba(212,175,55,.07), transparent 64%),
+    linear-gradient(180deg,#070A14 0%,#0A0E1A 48%,#070A14 100%);
+  --gradient-nebula-soft:
+    radial-gradient(44% 40% at 50% 20%, rgba(139,124,248,.10), transparent 60%),
+    radial-gradient(40% 36% at 30% 80%, rgba(95,201,232,.08), transparent 58%);
+
+  /* —— Spacing（不变） —— */
+  --space-xs:4px; --space-sm:8px; --space-md:16px; --space-lg:24px;
+  --space-xl:32px; --space-2xl:48px; --space-3xl:64px; --space-4xl:96px;
+
+  /* —— Radius（增补 pill） —— */
+  --radius-sm:8px; --radius-md:10px; --radius-lg:12px; --radius-xl:16px;
+  --radius-pill:999px;
+
+  /* —— Type —— */
+  --font-display:"Orbitron","Exo 2","Rajdhani",-apple-system,BlinkMacSystemFont,
+                  "Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",
+                  "Noto Sans SC",sans-serif;   /* 几何无衬线；中文回退黑体；零依赖 */
+  --font-sans:"Inter","Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",
+              "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-mono:"JetBrains Mono","SFMono-Regular","Menlo","Consolas",monospace;
+
+  /* —— Motion —— */
+  --dur-fast:150ms; --dur-base:200ms; --dur-slow:300ms;
+  --dur-ambient:800ms;
+  --ease-out:cubic-bezier(.16,1,.3,1);   /* 弹入/卡片 hover */
+  --ease-in-out:cubic-bezier(.4,0,.2,1); /* 氛围循环 */
+
+  /* —— 旧 accent（@deprecated 保留，禁止新引用；QA 确认零引用后删除） —— */
+  --color-accent-50:#EEF1FF;
+  --color-accent-100:#DDE3FF;
+  --color-accent-200:#C3CCFF;
+  --color-accent-300:#9FADFF;
+  --color-accent-600:#2B4CFF;
+  --color-accent-700:#2240E0;
+  --color-accent-800:#1A33B8;
+  --color-accent-900:#1630A6;
+  --color-on-accent:#0A0E1A;   /* 防残留：即使误引用也为深字，不产生白字 on 金 */
+}

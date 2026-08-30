@@ -1,0 +1,54 @@
+{
+  "repository": "mira-ai-design-starter-kit",
+  "totalCases": 3,
+  "categories": [
+    "Posters & Typography",
+    "Products & E-commerce",
+    "UI & Interfaces"
+  ],
+  "styles": [
+    "Editorial",
+    "Minimal",
+    "Typography"
+  ],
+  "scenes": [
+    "Commerce",
+    "Event",
+    "Social"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "title": "夜航音乐节海报",
+      "image": "/images/demo/demo-poster.svg",
+      "imageAlt": "深蓝色夜航音乐节演示海报",
+      "prompt": "设计一张夜间音乐节海报，使用深蓝背景、清晰的大标题和少量星轨装饰。",
+      "category": "Posters & Typography",
+      "styles": ["Typography", "Editorial"],
+      "scenes": ["Event"],
+      "featured": true
+    },
+    {
+      "id": 2,
+      "title": "山野气泡水商品卡",
+      "image": "/images/demo/demo-product.svg",
+      "imageAlt": "绿色山野气泡水商品卡演示图",
+      "prompt": "设计一张清新的气泡水商品卡，使用绿色渐变、圆形产品占位和简短卖点。",
+      "category": "Products & E-commerce",
+      "styles": ["Minimal", "Editorial"],
+      "scenes": ["Commerce"],
+      "featured": true
+    },
+    {
+      "id": 3,
+      "title": "周末灵感社交卡",
+      "image": "/images/demo/demo-social.svg",
+      "imageAlt": "紫橙渐变周末灵感社交内容卡",
+      "prompt": "设计一张适合社交平台发布的周末灵感卡片，使用紫橙渐变和留白排版。",
+      "category": "UI & Interfaces",
+      "styles": ["Minimal", "Typography"],
+      "scenes": ["Social"],
+      "featured": true
+    }
+  ]
+}

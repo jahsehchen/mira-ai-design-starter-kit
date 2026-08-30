@@ -1,0 +1,81 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ${STACK_NAME:-mira-starter}-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-mira}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
+      POSTGRES_DB: ${DB_NAME:-mira}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-mira} -d ${DB_NAME:-mira}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: ${STACK_NAME:-mira-starter}-api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-mira}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
+      DB_NAME: ${DB_NAME:-mira}
+      DB_SYNC: "false"
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET in .env.production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?Set JWT_REFRESH_SECRET in .env.production}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      AI_MOCK_FAIL_RATE: ${AI_MOCK_FAIL_RATE:-0}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+      AI_NVIDIA_MODEL: ${AI_NVIDIA_MODEL:-black-forest-labs/flux.1-dev}
+      AI_NVIDIA_BASE_URL: ${AI_NVIDIA_BASE_URL:-https://ai.api.nvidia.com/v1/genai}
+      AI_NVIDIA_LLM_MODEL: ${AI_NVIDIA_LLM_MODEL:-deepseek-ai/deepseek-v4-flash-0731}
+      AI_NVIDIA_LLM_BASE_URL: ${AI_NVIDIA_LLM_BASE_URL:-https://integrate.api.nvidia.com/v1}
+      AI_NVIDIA_PROMPT_ENHANCE: ${AI_NVIDIA_PROMPT_ENHANCE:-true}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_ORDER_EXPIRE_MINUTES: ${PAYMENT_ORDER_EXPIRE_MINUTES:-15}
+      PAYMENT_MOCK_TOKEN: ${PAYMENT_MOCK_TOKEN:?Set PAYMENT_MOCK_TOKEN in .env.production}
+      WECHAT_MCHID: ${WECHAT_MCHID:-}
+      WECHAT_APPID: ${WECHAT_APPID:-}
+      WECHAT_API_V3_KEY: ${WECHAT_API_V3_KEY:-}
+      WECHAT_NOTIFY_URL: ${WECHAT_NOTIFY_URL:-}
+      ALIPAY_APP_ID: ${ALIPAY_APP_ID:-}
+      ALIPAY_PRIVATE_KEY: ${ALIPAY_PRIVATE_KEY:-}
+      ALIPAY_PUBLIC_KEY: ${ALIPAY_PUBLIC_KEY:-}
+      ALIPAY_NOTIFY_URL: ${ALIPAY_NOTIFY_URL:-}
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: ${STACK_NAME:-mira-starter}-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  db-data:
+    name: ${STACK_NAME:-mira-starter}-db-data
+  uploads:
+    name: ${STACK_NAME:-mira-starter}-uploads

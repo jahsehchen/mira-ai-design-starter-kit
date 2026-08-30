@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build and coverage
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Runtime data
+uploads/
+*.sqlite
+*.sqlite3
+*.db
+logs/
+*.log
+npm-debug.log*
+
+# Environment files (templates remain tracked)
+.env
+.env.*
+!.env.example
+!.env.production.example
+apps/*/.env
+apps/*/.env.*
+
+# Test and browser artifacts
+reports/
+test-results/
+playwright-report/
+screenshots/
+
+# Caches and temporary files
+.cache/
+.turbo/
+.vite/
+tmp/
+temp/
+*.tmp
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

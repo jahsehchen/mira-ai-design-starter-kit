@@ -1,0 +1,70 @@
+{
+  "repository": "mira-ai-design-starter-kit",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "demo-poster",
+      "value": "Posters & Typography",
+      "title": "海报与标题",
+      "cover": "/images/demo/demo-poster.svg",
+      "description": "强调信息层级、标题节奏和活动氛围。"
+    },
+    {
+      "id": "demo-commerce",
+      "value": "Products & E-commerce",
+      "title": "商品与电商",
+      "cover": "/images/demo/demo-product.svg",
+      "description": "强调产品主体、卖点和行动按钮。"
+    },
+    {
+      "id": "demo-social",
+      "value": "UI & Interfaces",
+      "title": "社交内容卡",
+      "cover": "/images/demo/demo-social.svg",
+      "description": "强调快速阅读、留白和移动端比例。"
+    }
+  ],
+  "styles": ["Editorial", "Minimal", "Typography"],
+  "scenes": ["Commerce", "Event", "Social"],
+  "templates": [
+    {
+      "id": "event-poster",
+      "title": "活动主视觉",
+      "description": "适合活动海报、封面和主视觉草案。",
+      "category": "Posters & Typography",
+      "styles": ["Typography", "Editorial"],
+      "scenes": ["Event"],
+      "useWhen": "需要让标题成为第一视觉焦点时",
+      "guidance": ["先建立标题层级", "只使用一种核心装饰元素", "为时间和地点保留清晰区域"],
+      "pitfalls": ["避免装饰压过标题", "避免信息过密"],
+      "cover": "/images/demo/demo-poster.svg",
+      "exampleCases": [1]
+    },
+    {
+      "id": "product-card",
+      "title": "商品卖点卡",
+      "description": "适合商品主图、详情页头图和促销卡。",
+      "category": "Products & E-commerce",
+      "styles": ["Minimal", "Editorial"],
+      "scenes": ["Commerce"],
+      "useWhen": "需要突出单一商品和一个核心卖点时",
+      "guidance": ["商品主体占据主要面积", "卖点控制在两行以内", "行动信息与价格保持对齐"],
+      "pitfalls": ["避免加入无关品牌元素", "避免同时展示过多优惠"],
+      "cover": "/images/demo/demo-product.svg",
+      "exampleCases": [2]
+    },
+    {
+      "id": "social-card",
+      "title": "社交内容卡",
+      "description": "适合社交平台封面、短句卡和内容预告。",
+      "category": "UI & Interfaces",
+      "styles": ["Minimal", "Typography"],
+      "scenes": ["Social"],
+      "useWhen": "需要在移动端快速传达一个观点时",
+      "guidance": ["使用短标题", "四周保留安全留白", "限制色彩数量"],
+      "pitfalls": ["避免正文过小", "避免渐变影响文字对比度"],
+      "cover": "/images/demo/demo-social.svg",
+      "exampleCases": [3]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">山野气泡水演示商品卡</title>
+  <desc id="desc">项目自有的绿色抽象商品演示图</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9f8df"/>
+      <stop offset="1" stop-color="#78bd88"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" rx="48" fill="url(#bg)"/>
+  <circle cx="400" cy="480" r="250" fill="#f8fff3" opacity=".72"/>
+  <rect x="318" y="220" width="164" height="500" rx="76" fill="#174d3a"/>
+  <rect x="338" y="248" width="124" height="444" rx="58" fill="#eaf6d6"/>
+  <circle cx="400" cy="435" r="64" fill="#9fd36f"/>
+  <path d="M400 377c45 28 58 76 0 116-58-40-45-88 0-116z" fill="#2f7c55"/>
+  <g fill="#153c2e" font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="400" y="115" font-size="28" letter-spacing="7">DEMO PRODUCT</text>
+    <text x="400" y="825" font-size="68" font-weight="700">FOREST FIZZ</text>
+    <text x="400" y="884" font-size="30">BOTANICAL · ZERO SUGAR</text>
+  </g>
+</svg>

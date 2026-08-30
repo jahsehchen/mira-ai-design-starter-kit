@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">夜航音乐节演示海报</title>
+  <desc id="desc">项目自有的深蓝色抽象演示图</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="0.58" stop-color="#162b59"/>
+      <stop offset="1" stop-color="#4f2a78"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" rx="48" fill="url(#bg)"/>
+  <circle cx="650" cy="180" r="112" fill="#f0c96b" opacity=".88"/>
+  <path d="M-30 750C190 610 360 890 830 565" fill="none" stroke="#66d7ff" stroke-width="12" opacity=".62"/>
+  <path d="M-20 820C260 650 420 930 820 650" fill="none" stroke="#d99cff" stroke-width="5" opacity=".72"/>
+  <g fill="#fff">
+    <text x="72" y="150" font-family="Arial, sans-serif" font-size="30" letter-spacing="8">DEMO POSTER</text>
+    <text x="72" y="310" font-family="Arial, sans-serif" font-size="96" font-weight="700">NIGHT</text>
+    <text x="72" y="410" font-family="Arial, sans-serif" font-size="96" font-weight="700">VOYAGE</text>
+    <text x="78" y="888" font-family="Arial, sans-serif" font-size="34">SAT 20:00 · OPEN AIR</text>
+  </g>
+</svg>
