@@ -25,14 +25,14 @@
   },
   "fred": {
     "status": "ok",
-    "detail": "450 observations",
-    "new_rows": 0,
-    "at": "2026-10-08T04:50:07+00:00"
+    "detail": "4094 observations",
+    "new_rows": 3644,
+    "at": "2026-10-08T05:00:32+00:00"
   },
   "news": {
     "status": "ok",
-    "detail": "2/5 feeds ok | WSJ: feeds.a.dowjones.io is not in the environment's allowed domains; CNBC: search.cnbc.com is not in the environment's allowed domains",
-    "new_rows": 0,
-    "at": "2026-10-08T04:50:08+00:00"
+    "detail": "4/5 feeds ok | WSJ: feeds.a.dowjones.io is not in the environment's allowed domains",
+    "new_rows": 31,
+    "at": "2026-10-08T05:00:35+00:00"
   }
 }

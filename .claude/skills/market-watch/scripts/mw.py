@@ -230,9 +230,12 @@ FRED_SERIES = {"WALCL": "美联储总资产(周)", "NFCI": "芝加哥联储金�
                "PCEPILFE": "核心PCE物价指数(月)", "A191RL1Q225SBEA": "实际GDP环比折年率 %(季)"}
 
 
+FRED_EXTRA = ["EFFR", "VIXCLS", "BAMLH0A0HYM2", "SP500"]  # inputs to the derived sections, not shown in the FRED table
+
+
 def src_fred():
     rows = []
-    for sid in FRED_SERIES:
+    for sid in list(FRED_SERIES) + FRED_EXTRA:
         url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}&cosd={TODAY.year - 3}-01-01"
         rd = csv.reader(io.StringIO(text_of(url)))
         hdr = next(rd)
@@ -296,14 +299,14 @@ def src_news():
 SOURCES = {"yields": src_yields, "nowcast": src_nowcast, "factset": src_factset,
            "bea": src_bea, "fred": src_fred, "news": src_news}
 
-# Sources that are not fetched automatically, with the reason (shown in the report)
+# Sources that are not fetched automatically: (state, reason). Shown in the report's status table.
 NOT_AUTOMATED = {
-    "S&P 500 EPS (spglobal xlsx)": "site returns 403 to scripts; download the file by hand and tell me, or add values with `manual add`",
-    "CME FedWatch": "CME terms prohibit automated access and block the IP; enter the probabilities with `manual add`",
-    "CNN Fear & Greed": "site blocks bots (HTTP 418); enter the daily value with `manual add`",
-    "hedgefollow": "requires sign-in; not automated (13F data can come from SEC EDGAR instead)",
-    "Yardeni forward P/E (PDF)": "host yardeni.com not yet allowed in the environment; parser not written until it can be tested",
-    "Manheim used vehicle index": "host site.manheim.com not yet allowed in the environment; parser not written until it can be tested",
+    "S&P 500 EPS (spglobal xlsx)": ("取消", "站点对脚本返回 403，不绕过。FactSet 周报已提供前瞻 EPS、盈利增速和目标价，不再需要这张表"),
+    "CME FedWatch": ("替代", "CME 条款禁止自动访问，不绕过。改用上方“国债隐含政策利率路径”（粗估，不是概率）；需要精确概率时可 `manual add`"),
+    "CNN Fear & Greed": ("替代", "网站拒绝机器人(HTTP 418)，不绕过。改用上方“市场情绪综合”（自建，不是 CNN 指数）；想记录 CNN 的数可 `manual add`"),
+    "hedgefollow": ("取消", "需要登录，没有公开数据。要对冲基金仓位，可改用 SEC 13F（需放行 www.sec.gov 并指定基金）"),
+    "Yardeni forward P/E (PDF)": ("取消", "链接已失效(404)，旧图表集已归档到 2023 年底。前瞻 P/E 由 FactSet 提供"),
+    "Manheim used vehicle index": ("待放行", "你给的 site.manheim.com 页面停在 2025-12，已不更新；现行数据发布在 www.coxautoinc.com，该域名未放行。放行后再写解析并实测"),
 }
 
 
@@ -409,6 +412,47 @@ def yield_tables(ys):
     return last, rows, {"10Y-2Y": sp("10Y", "2Y"), "10Y-3M": sp("10Y", "3M")}, days
 
 
+def pct_rank(vals, x):
+    return 100.0 * sum(1 for v in vals if v <= x) / len(vals)
+
+
+def at_or_before(series, d):
+    """Last value with date <= d from a date-sorted list of (date, value)."""
+    import bisect
+    i = bisect.bisect_right([x[0] for x in series], d)
+    return series[i - 1][1] if i else None
+
+
+def sentiment_series(fred, n=40):
+    """Self-built 0-100 sentiment composite (NOT the CNN index). Four parts, each a percentile over the trailing
+    252 trading days, 100 = greed: low VIX, tight high-yield spread, S&P 500 above its 125-day average,
+    S&P 500 close to its 252-day high. Returns [(date, score, parts)] for the last n trading days."""
+    sp, vix, hy = fred.get("SP500"), fred.get("VIXCLS"), fred.get("BAMLH0A0HYM2")
+    if not (sp and vix and hy) or len(sp) < 560:
+        return []
+    px = [v for _, v in sp]
+    ma = [None] * len(px); hi = [None] * len(px)
+    for j in range(len(px)):
+        if j >= 124: ma[j] = sum(px[j - 124:j + 1]) / 125
+        if j >= 251: hi[j] = max(px[j - 251:j + 1])
+    out = []
+    for i in range(len(px) - n, len(px)):
+        d = sp[i][0]
+        mom_h = [px[j] / ma[j] - 1 for j in range(i - 251, i + 1) if ma[j]]
+        str_h = [px[j] / hi[j] for j in range(i - 251, i + 1) if hi[j]]
+        vix_h = [v for dd, v in vix if dd <= d][-252:]; hy_h = [v for dd, v in hy if dd <= d][-252:]
+        if len(mom_h) < 200 or len(str_h) < 200 or len(vix_h) < 200 or len(hy_h) < 200:
+            continue
+        parts = {"动量(标普/125日均线)": pct_rank(mom_h, mom_h[-1]), "价格强度(距52周高点)": pct_rank(str_h, str_h[-1]),
+                 "波动率(VIX,反向)": 100 - pct_rank(vix_h, vix_h[-1]), "信用利差(高收益债,反向)": 100 - pct_rank(hy_h, hy_h[-1])}
+        out.append((d, sum(parts.values()) / 4, parts))
+    return out
+
+
+def sentiment_label(x):
+    return "极度恐惧" if x < 25 else "恐惧" if x < 45 else "中性" if x < 55 else "贪婪" if x < 75 else "极度贪婪"
+
+
 def build_md(D, commentary):
     L = [f"# Market Watch — {TODAY.isoformat()}", "",
          "> 数据来自公开来源，仅描述指标变化，不构成投资建议。每个数字都可在对应来源核实。", ""]
@@ -440,6 +484,35 @@ def build_md(D, commentary):
         L.append("利差(bp): " + "，".join(f"{k} = {v:+d}" + ("（倒挂）" if v is not None and v < 0 else "") for k, v in spreads.items() if v is not None))
     else:
         L.append("暂无数据。")
+    # policy path implied by bills (derived from official data)
+    L += ["", "## 国债隐含的政策利率路径（粗估，不是 FedWatch 概率）", ""]
+    effr = D["fred"].get("EFFR"); ycur = D["yields"].get(yt[0]) if yt else None
+    if effr and ycur:
+        e = effr[-1][1]; g = lambda t: ycur.get(t)
+        L += [f"有效联邦基金利率 EFFR {e:.2f}%（{effr[-1][0]}）。收益率为财政部 {yt[0]} 数据。", "",
+              "| 项目 | 利率% | 较 EFFR (bp) |", "|---|---|---|"]
+        for t in ("1M", "3M", "6M", "1Y", "2Y"):
+            if g(t) is not None: L.append(f"| {t} 国债收益率 | {g(t):.2f} | {round((g(t) - e) * 100):+d} |")
+        fw = [("3个月后起的3个月远期", 2 * g("6M") - g("3M") if g("6M") and g("3M") else None),
+              ("6个月后起的6个月远期", 2 * g("1Y") - g("6M") if g("1Y") and g("6M") else None),
+              ("1年后起的1年远期", 2 * g("2Y") - g("1Y") if g("2Y") and g("1Y") else None)]
+        for nm, v in fw:
+            if v is not None: L.append(f"| {nm}（隐含） | {v:.2f} | {round((v - e) * 100):+d} |")
+        L += ["", "说明：由国债收益率按简单利率推算的远期利率，与 EFFR 的差为正，表示市场定价的政策利率高于当前。短端（1M、3M）较 EFFR 的正差有相当部分来自国债票据相对 OIS 的价差，不代表马上加息；看远期曲线的形状和变化比看绝对差更有意义。这些数含期限溢价，不是概率，也不能当作 FedWatch 的精确替代。"]
+    else:
+        L.append("暂无数据（需要 FRED 的 EFFR 和财政部收益率）。")
+    # self-built sentiment
+    L += ["", "## 市场情绪综合（自建，不是 CNN 恐惧贪婪指数）", ""]
+    ss = sentiment_series(D["fred"])
+    if ss:
+        d0, v0, p0 = ss[-1]
+        prev = lambda k: ss[max(0, len(ss) - 1 - k)]
+        L += [f"截至 {d0}：**{v0:.0f} / 100（{sentiment_label(v0)}）**。1周前 {prev(5)[1]:.0f}，约1个月前 {prev(21)[1]:.0f}。", "",
+              "| 分项 | 分位得分 (100=贪婪) |", "|---|---|"] + [f"| {k} | {v:.0f} |" for k, v in p0.items()] + [
+              "", "方法：4 个公开指标（FRED：标普500、VIX、ICE BofA 高收益债利差）各自对过去 252 个交易日取百分位，等权平均。"
+              "不含看跌/看涨期权比、市场广度、避险需求，数值不会与 CNN 的指数一致，只看方向和相对位置。"]
+    else:
+        L.append("暂无数据（需要 FRED 的 SP500、VIXCLS、BAMLH0A0HYM2，且至少约 560 个交易日）。")
     # nowcast
     L += ["", "## 通胀 Nowcast（克利夫兰联储，每个工作日更新）", ""]
     if D["nowcast"]:
@@ -502,7 +575,7 @@ def build_md(D, commentary):
     for k, v in D["status"].items():
         L.append(f"| {k} | {v['status']} | {md_cell(v['detail'])[:300]} （{v['at'][:16]}Z） |")
     for k, why in NOT_AUTOMATED.items():
-        L.append(f"| {md_cell(k)} | 手动 | {md_cell(why)} |")
+        L.append(f"| {md_cell(k)} | {why[0]} | {md_cell(why[1])} |")
     return "\n".join(L) + "\n"
 
 
@@ -554,6 +627,8 @@ def build_html(D, commentary):
         if sp["10Y-2Y"] is not None: tiles.append(("10Y-2Y 利差", f"{sp['10Y-2Y']:+d} bp", "倒挂" if sp["10Y-2Y"] < 0 else "正常"))
     if ("year", "Core PCE Inflation") in D["nowcast"]:
         tiles.append(("核心PCE同比 nowcast", f"{D['nowcast'][('year', 'Core PCE Inflation')][0]:.2f}%", f"克利夫兰联储 {D['nowcast_asof']}"))
+    ss = sentiment_series(D["fred"])
+    if ss: tiles.append(("情绪综合(自建)", f"{ss[-1][1]:.0f} · {sentiment_label(ss[-1][1])}", f"非 CNN 指数 · {ss[-1][0]}"))
     w = D["fred"].get("WALCL")
     if w: tiles.append(("美联储总资产", f"{w[-1][1]/1e6:.2f} 万亿$", w[-1][0]))
     n = D["fred"].get("NFCI")
@@ -653,7 +728,7 @@ def main():
     elif args.cmd == "digest": cmd_digest(args)
     elif args.cmd == "status":
         for k, v in load_status().items(): print(f"{k:<9} {v['status']:<16} {v['at']}  {v['detail']}")
-        for k, why in NOT_AUTOMATED.items(): print(f"{k:<28} not automated: {why}")
+        for k, (state, why) in NOT_AUTOMATED.items(): print(f"{k:<28} {state}: {why}")
     elif args.cmd == "manual": cmd_manual_add(args)
 
 

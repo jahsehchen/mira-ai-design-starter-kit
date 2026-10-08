@@ -28,12 +28,12 @@ python3 -I .claude/skills/market-watch/scripts/mw.py status
 | FactSet Earnings Insight (PDF) | forward 12M P/E and 5/10y averages, quarterly and CY EPS growth, bottom-up EPS and target price, EPS guidance counts | PDF fetched by date pattern, numbers extracted with `pdftotext`; the PDF is not stored | weekly (Fri) |
 | US Treasury | daily par yield curve, 1M to 30Y | official CSV (replaces ustreasuryyieldcurve.com, same data) | daily |
 | Cleveland Fed | CPI, core CPI, PCE, core PCE nowcast (month, quarter, year) | the site's own chart JSON | each business day |
-| FRED | WALCL, NFCI, PCEPILFE, A191RL1Q225SBEA | `fredgraph.csv` | weekly to quarterly |
+| FRED | WALCL, NFCI, PCEPILFE, A191RL1Q225SBEA; plus EFFR, VIXCLS, BAMLH0A0HYM2, SP500 as inputs to the derived sections | `fredgraph.csv` | daily to quarterly |
 | BEA | headline indicators on the home page | page text, 4 fixed patterns | on release |
 | Reuters (via Google News), Bloomberg | headlines and links only | public RSS, filtered to Fed, inflation, rates, earnings, equities | daily |
 | WSJ, CNBC | headlines and links only | public RSS; reports `blocked-network` until their hosts are allowed | daily |
 
-Manual or not automated (each is listed in the report's status table with the reason): S&P 500 EPS xlsx (site returns 403 to scripts), CME FedWatch (CME terms prohibit scraping), CNN Fear & Greed (site blocks bots), hedgefollow (sign-in), Yardeni PDF and Manheim (hosts not yet allowed, parsers not written until they can be tested).
+Replaced or dropped (each is listed with its reason in the report's status table): CME FedWatch (CME terms prohibit scraping) is replaced by a policy-rate path derived from Treasury yields and EFFR (not probabilities); CNN Fear & Greed (site blocks bots) is replaced by a self-built 0-100 sentiment composite from FRED (S&P 500, VIX, high-yield spread), explicitly not the CNN index; the S&P 500 EPS xlsx (403 to scripts) is dropped because FactSet already covers forward EPS; hedgefollow (sign-in) and Yardeni (dead link, archived) are dropped; Manheim's live release is on www.coxautoinc.com (host not allowed) and the page given was frozen at 2025-12, so there is no Manheim parser yet. `manual add` remains for any value the user wants to record by hand.
 
 ## Weekly run (Friday after the US close) and daily news
 
