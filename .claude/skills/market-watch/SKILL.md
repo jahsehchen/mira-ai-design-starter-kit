@@ -30,7 +30,7 @@ python3 -I .claude/skills/market-watch/scripts/mw.py status
 | Cleveland Fed | CPI, core CPI, PCE, core PCE nowcast (month, quarter, year) | the site's own chart JSON | each business day |
 | FRED | WALCL, NFCI, PCEPILFE, A191RL1Q225SBEA; plus EFFR, VIXCLS, BAMLH0A0HYM2, SP500 as inputs to the derived sections | `fredgraph.csv` | daily to quarterly |
 | BEA | headline indicators on the home page | page text, 4 fixed patterns | on release |
-| FinancialJuice (primary news source) | headlines and links only | public RSS (`www.financialjuice.com`), wider filter (central banks, macro data, oil, FX, gold); needs the host allowed | daily |
+| FinancialJuice (primary news source) | headlines and links only | public RSS `www.financialjuice.com/feed.ashx?xy=rss`, **no keyword filter** (curated finance squawks: data releases, central banks, geopolitics). Tested live: the feed holds only the latest 100 items, roughly 10 hours overnight and less when markets are busy, so history exists only for the moments a refresh ran | on request |
 | Reuters (via Google News), Bloomberg, CNBC | headlines and links only | public RSS, filtered to Fed, inflation, rates, earnings, equities | daily |
 | WSJ | headlines and links only | public RSS; blocked until `feeds.a.dowjones.io` is allowed, replaced in practice by FinancialJuice | daily |
 
