@@ -3,36 +3,36 @@
     "status": "ok",
     "detail": "latest 2026-10-07",
     "new_rows": 0,
-    "at": "2026-10-08T04:50:01+00:00"
+    "at": "2026-10-08T05:06:49+00:00"
   },
   "nowcast": {
     "status": "ok",
     "detail": "as of 2026-10-07",
     "new_rows": 0,
-    "at": "2026-10-08T04:50:02+00:00"
+    "at": "2026-10-08T05:06:51+00:00"
   },
   "factset": {
     "status": "ok",
     "detail": "3 reports 2026-09-18..2026-10-02; 40 metrics",
     "new_rows": 0,
-    "at": "2026-10-08T04:50:05+00:00"
+    "at": "2026-10-08T05:06:54+00:00"
   },
   "bea": {
     "status": "ok",
     "detail": "4 indicators",
     "new_rows": 0,
-    "at": "2026-10-08T04:51:26+00:00"
+    "at": "2026-10-08T05:06:56+00:00"
   },
   "fred": {
     "status": "ok",
     "detail": "4094 observations",
-    "new_rows": 3644,
-    "at": "2026-10-08T05:00:32+00:00"
+    "new_rows": 0,
+    "at": "2026-10-08T05:06:57+00:00"
   },
   "news": {
     "status": "ok",
     "detail": "4/5 feeds ok | WSJ: feeds.a.dowjones.io is not in the environment's allowed domains",
-    "new_rows": 31,
-    "at": "2026-10-08T05:00:35+00:00"
+    "new_rows": 1,
+    "at": "2026-10-08T05:06:59+00:00"
   }
 }
