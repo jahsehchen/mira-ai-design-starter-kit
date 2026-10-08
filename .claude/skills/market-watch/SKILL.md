@@ -14,6 +14,7 @@ Public-data tracker. History lives in CSV files, the report is regenerated from 
 ```bash
 python3 -I .claude/skills/market-watch/scripts/mw.py fetch                 # all sources, then read the status lines
 python3 -I .claude/skills/market-watch/scripts/mw.py fetch --only news     # daily headline refresh
+python3 -I .claude/skills/market-watch/scripts/mw.py digest                  # today's new headlines -> data/market-watch/news/DATE.md
 python3 -I .claude/skills/market-watch/scripts/mw.py fetch --only factset --weeks 14   # backfill FactSet history
 python3 -I .claude/skills/market-watch/scripts/mw.py report --commentary FILE          # rebuild report + dashboard
 python3 -I .claude/skills/market-watch/scripts/mw.py manual add --indicator "CNN Fear & Greed" --value 62 --date 2026-10-08 --note "from the user"
@@ -36,9 +37,9 @@ Manual or not automated (each is listed in the report's status table with the re
 
 ## Weekly run (Friday after the US close) and daily news
 
-1. `fetch` (weekly) or `fetch --only news` (daily). Read every status line. A source that is `failed` or `blocked-*` is reported, never silently skipped.
+1. `fetch` (weekly), or `fetch --only news` then `digest` (daily, Mon to Thu; Friday's weekly run covers news too). Read every status line. A source that is `failed` or `blocked-*` is reported, never silently skipped.
 2. Weekly only: write a short commentary file (3 to 6 sentences, Chinese): levels, change since the last report, anything stale or missing. State facts the tables support; cite figures exactly. **No recommendations, no forecasts, no buy/sell language.** Then `report --commentary FILE`.
-3. Commit only `data/market-watch/` and push to the working branch. Commit message: `market-watch: weekly update YYYY-MM-DD` (or `news`).
+3. Commit only `data/market-watch/` and push to the working branch. Commit message: `market-watch: weekly update YYYY-MM-DD` (or `market-watch: news YYYY-MM-DD`). Before pushing, `git pull --rebase`; if that conflicts inside `data/market-watch/`, abort, reset to the remote branch, re-run the fetch and commit again (the fetch is idempotent).
 
 ## Guardrails
 

@@ -80,7 +80,7 @@ def upsert(name, fields, rows, key):
         cur[k] = r
     tmp = DATA / (name + ".tmp")
     with tmp.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields); w.writeheader()
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n"); w.writeheader()
         for k in sorted(cur):
             w.writerow(cur[k])
     tmp.replace(DATA / name)
@@ -602,6 +602,25 @@ def cmd_report(args):
     print(f"wrote {rd / (TODAY.isoformat() + '.md')} and {DATA / 'latest.html'}")
 
 
+def cmd_digest(args):
+    """Headlines first seen today (or --date), grouped by outlet. Deterministic: no commentary."""
+    day = args.date or TODAY.isoformat()
+    rows = [r for r in read_csv("news.csv") if r["first_seen"] == day]
+    L = [f"# 新闻标题摘要 — {day}", "", "> 仅标题与链接，来自公开 RSS；按美联储、通胀、利率、财报、股市关键词筛选。", ""]
+    for outlet in ("Reuters", "Bloomberg", "WSJ", "CNBC"):
+        items = sorted([r for r in rows if r["outlet"] == outlet], key=lambda r: r["published"], reverse=True)
+        if items:
+            L += [f"## {outlet}（{len(items)}）", ""] + [f"- {md_cell(r['title'])} — [{(r['published'] or day)[:16].replace('T', ' ')}Z]({r['url']})" for r in items] + [""]
+    st = load_status().get("news")
+    if st:
+        L += ["## 状态", "", f"{st['status']}: {md_cell(st['detail'])}（{st['at'][:16]}Z）", ""]
+    if not rows:
+        L.insert(3, "今天没有新增的相关标题。")
+    d = DATA / "news"; d.mkdir(parents=True, exist_ok=True)
+    (d / f"{day}.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+    print(f"wrote {d / (day + '.md')} ({len(rows)} headlines)")
+
+
 def cmd_manual_add(args):
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.date):
         sys.exit("--date must be YYYY-MM-DD")
@@ -617,6 +636,7 @@ def main():
         p = sub.add_parser(name); p.add_argument("--only", help=f"comma list of: {','.join(SOURCES)}"); p.add_argument("--commentary")
         p.add_argument("--weeks", type=int, default=3, help="FactSet look-back in weeks (use 12+ to backfill history)")
     sub.add_parser("status")
+    dg = sub.add_parser("digest"); dg.add_argument("--date")
     r = sub.add_parser("report"); r.add_argument("--commentary")
     m = sub.add_parser("manual"); ms = m.add_subparsers(dest="sub", required=True)
     a = ms.add_parser("add"); a.add_argument("--indicator", required=True); a.add_argument("--value", required=True)
@@ -630,6 +650,7 @@ def main():
         run_sources(names)
         if args.cmd == "run": cmd_report(args)
     elif args.cmd == "report": cmd_report(args)
+    elif args.cmd == "digest": cmd_digest(args)
     elif args.cmd == "status":
         for k, v in load_status().items(): print(f"{k:<9} {v['status']:<16} {v['at']}  {v['detail']}")
         for k, why in NOT_AUTOMATED.items(): print(f"{k:<28} not automated: {why}")
