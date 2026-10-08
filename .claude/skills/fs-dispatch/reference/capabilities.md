@@ -28,6 +28,16 @@ The 12 connectors in `financial-analysis/.mcp.json` (Daloopa, Morningstar, S&P G
 
 If none of these works and the job is only meaningful with real data (reconciliation, tie-out, KYC), stop and ask for the file.
 
+## Recalculate Excel output
+
+`xlsx-author` writes with openpyxl, which stores formulas but **no computed values**. Excel and Google Sheets calculate on open, but previews, mobile viewers and scripts show blanks, and nothing has actually proven the formulas evaluate. After writing a workbook, recalculate it with LibreOffice and replace the file (tested: formulas, blue inputs, comments, number formats and column widths survive):
+
+```bash
+mkdir -p out/.recalc && soffice --headless --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir out/.recalc out/<file>.xlsx && mv out/.recalc/<file>.xlsx out/<file>.xlsx && rmdir out/.recalc
+```
+
+Then read it back with `openpyxl.load_workbook(path, data_only=True)` and confirm: no cell value starts with `#` (`#DIV/0!`, `#REF!`, `#NAME?`), and the Checks tab is all TRUE. Report any failure; do not hand over a workbook you have not recalculated. If `soffice` is missing, say so in the close-out.
+
 ## Where things go
 
 - Deliverables: `out/<job-slug>-<artifact>.<ext>` (for example `out/acme-pitch-model.xlsx`). `out/` is gitignored. The author skills write to `./out/` by contract.

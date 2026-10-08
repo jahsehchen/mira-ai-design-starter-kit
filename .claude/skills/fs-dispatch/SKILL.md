@@ -63,7 +63,7 @@ Everything here produces drafts, so there is nothing irreversible to confirm bef
 - **Agents run as playbooks** by default (see `reference/agent-playbooks.md`).
 - **Pass state explicitly** between steps: file paths in `out/`, named assumptions, open flags. Each step reads the previous artifact instead of relying on memory.
 - **Parallelize independent branches** (separate tickers, entities, or peer-set vs sector research) with subagents. Keep dependent steps sequential.
-- **Excel and PowerPoint**: no Office add-in here, so use `financial-analysis:xlsx-author` and `:pptx-author`. They write to `./out/`.
+- **Excel and PowerPoint**: no Office add-in here, so use `financial-analysis:xlsx-author` and `:pptx-author`. They write to `./out/`. openpyxl saves formulas without computed values, so after writing any `.xlsx`, recalculate it and scan for errors before calling it done (`reference/capabilities.md`, "Recalculate Excel output").
 - **Stop at checkpoints.** Each playbook names them (for example after the model is built, after the deck). Stop, summarize what was built and what needs a decision, and wait.
 
 ## 5. Close-out
