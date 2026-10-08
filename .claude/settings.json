@@ -1,0 +1,28 @@
+{
+  "enabledPlugins": {
+    "investment-banking@financial-services-local": true,
+    "equity-research@financial-services-local": true,
+    "private-equity@financial-services-local": true,
+    "fund-admin@financial-services-local": true,
+    "operations@financial-services-local": true,
+    "pitch-agent@financial-services-local": false,
+    "meeting-prep-agent@financial-services-local": true,
+    "market-researcher@financial-services-local": false,
+    "earnings-reviewer@financial-services-local": false,
+    "model-builder@financial-services-local": false,
+    "valuation-reviewer@financial-services-local": false,
+    "gl-reconciler@financial-services-local": false,
+    "month-end-closer@financial-services-local": false,
+    "statement-auditor@financial-services-local": false,
+    "kyc-screener@financial-services-local": false,
+    "financial-analysis@financial-services-local": true
+  },
+  "extraKnownMarketplaces": {
+    "financial-services-local": {
+      "source": {
+        "source": "directory",
+        "path": "./vendor/financial-services"
+      }
+    }
+  }
+}
