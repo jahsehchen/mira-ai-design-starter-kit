@@ -1,16 +1,27 @@
 {
   "enabledPlugins": {
-    "financial-analysis@claude-for-financial-services": true,
-    "investment-banking@claude-for-financial-services": true,
-    "equity-research@claude-for-financial-services": true,
-    "private-equity@claude-for-financial-services": true,
-    "fund-admin@claude-for-financial-services": true
+    "investment-banking@financial-services-local": true,
+    "equity-research@financial-services-local": true,
+    "private-equity@financial-services-local": true,
+    "fund-admin@financial-services-local": true,
+    "operations@financial-services-local": true,
+    "pitch-agent@financial-services-local": true,
+    "meeting-prep-agent@financial-services-local": true,
+    "market-researcher@financial-services-local": true,
+    "earnings-reviewer@financial-services-local": true,
+    "model-builder@financial-services-local": true,
+    "valuation-reviewer@financial-services-local": true,
+    "gl-reconciler@financial-services-local": true,
+    "month-end-closer@financial-services-local": true,
+    "statement-auditor@financial-services-local": true,
+    "kyc-screener@financial-services-local": true,
+    "financial-analysis@financial-services-local": true
   },
   "extraKnownMarketplaces": {
-    "claude-for-financial-services": {
+    "financial-services-local": {
       "source": {
-        "source": "github",
-        "repo": "anthropics/financial-services"
+        "source": "directory",
+        "path": "./vendor/financial-services"
       }
     }
   }
