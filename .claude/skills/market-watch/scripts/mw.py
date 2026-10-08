@@ -248,9 +248,17 @@ def src_fred():
     return n, f"{len(rows)} observations"
 
 
-NEWS_RE = re.compile(r"\b(fed|federal reserve|fomc|powell|rate[- ](?:cut|hike|decision)s?|interest rates?|inflation|cpi|pce|"
-                     r"payrolls?|jobs report|treasur(?:y|ies)|yields?|s&p 500|wall street|stocks?|earnings|profits?|guidance|bonds?)\b", re.I)
+NEWS_TERMS = (r"fed|federal reserve|fomc|powell|rate[- ](?:cut|hike|decision)s?|interest rates?|inflation|cpi|pce|"
+              r"payrolls?|jobs report|treasur(?:y|ies)|yields?|s&p 500|wall street|stocks?|earnings|profits?|guidance|bonds?")
+# FinancialJuice posts terse market squawks from many wires, so its filter is wider (central banks, macro data, oil, FX, gold).
+WIDE_TERMS = (NEWS_TERMS + r"|ecb|boj|boe|pboc|rba|snb|lagarde|ueda|bailey|nfp|gdp|pmi|ism|retail sales|jobless|unemployment|"
+              r"oil|crude|brent|opec|gold|dollar|dxy|yen|euro|sanctions|tariffs?|default|downgrade|upgrade|buyback|ipo")
+NEWS_RE = re.compile(rf"\b(?:{NEWS_TERMS})\b", re.I)
+NEWS_RE_WIDE = re.compile(rf"\b(?:{WIDE_TERMS})\b", re.I)
+OUTLETS = ("FinancialJuice", "Reuters", "Bloomberg", "WSJ", "CNBC")      # display order; FinancialJuice is the primary source
+OUTLET_CAP = {"FinancialJuice": 25}                                       # items shown per outlet in the report (default 8)
 FEEDS = [
+    ("FinancialJuice", "https://www.financialjuice.com/feed.ashx?xy=rss"),
     ("Bloomberg", "https://feeds.bloomberg.com/markets/news.rss"),
     ("Reuters", "https://news.google.com/rss/search?q=" + urllib.parse.quote(
         'site:reuters.com ("federal reserve" OR inflation OR earnings OR "treasury yields" OR "S&P 500") when:7d') +
@@ -275,6 +283,7 @@ def parse_rss(xml, outlet):
         except ValueError:
             iso = ""
         title = re.sub(r"\s+-\s+(Reuters|Bloomberg|The Wall Street Journal|WSJ|CNBC)\s*$", "", title)
+        title = re.sub(r"^FinancialJuice:\s*", "", title)
         out.append({"outlet": outlet, "published": iso, "title": title, "url": link, "first_seen": TODAY.isoformat()})
     return out
 
@@ -284,7 +293,8 @@ def src_news():
     rows, errs, ok = [], [], 0
     for outlet, url in FEEDS:
         try:
-            rows += [r for r in parse_rss(text_of(url), outlet) if NEWS_RE.search(r["title"])]
+            rx = NEWS_RE_WIDE if outlet == "FinancialJuice" else NEWS_RE
+            rows += [r for r in parse_rss(text_of(url), outlet) if rx.search(r["title"])]
             ok += 1
         except Blocked as e:
             errs.append(f"{outlet}: {e.detail}")
@@ -564,8 +574,8 @@ def build_md(D, commentary):
     # news
     L += ["", "## 新闻标题（近7天，仅标题与链接）", ""]
     if D["news"]:
-        for outlet in ("Reuters", "Bloomberg", "WSJ", "CNBC"):
-            items = [r for r in D["news"] if r["outlet"] == outlet][:8]
+        for outlet in OUTLETS:
+            items = [r for r in D["news"] if r["outlet"] == outlet][:OUTLET_CAP.get(outlet, 8)]
             if items:
                 L += [f"**{outlet}**", ""] + [f"- {md_cell(r['title'])} — [{(r['published'] or r['first_seen'])[:10]}]({r['url']})" for r in items] + [""]
     else:
@@ -682,7 +692,7 @@ def cmd_digest(args):
     day = args.date or TODAY.isoformat()
     rows = [r for r in read_csv("news.csv") if r["first_seen"] == day]
     L = [f"# 新闻标题摘要 — {day}", "", "> 仅标题与链接，来自公开 RSS；按美联储、通胀、利率、财报、股市关键词筛选。", ""]
-    for outlet in ("Reuters", "Bloomberg", "WSJ", "CNBC"):
+    for outlet in OUTLETS:
         items = sorted([r for r in rows if r["outlet"] == outlet], key=lambda r: r["published"], reverse=True)
         if items:
             L += [f"## {outlet}（{len(items)}）", ""] + [f"- {md_cell(r['title'])} — [{(r['published'] or day)[:16].replace('T', ' ')}Z]({r['url']})" for r in items] + [""]
