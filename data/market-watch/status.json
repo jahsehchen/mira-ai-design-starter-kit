@@ -1,0 +1,38 @@
+{
+  "yields": {
+    "status": "ok",
+    "detail": "latest 2026-10-07",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:01+00:00"
+  },
+  "nowcast": {
+    "status": "ok",
+    "detail": "as of 2026-10-07",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:02+00:00"
+  },
+  "factset": {
+    "status": "ok",
+    "detail": "3 reports 2026-09-18..2026-10-02; 40 metrics",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:05+00:00"
+  },
+  "bea": {
+    "status": "ok",
+    "detail": "4 indicators",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:06+00:00"
+  },
+  "fred": {
+    "status": "ok",
+    "detail": "450 observations",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:07+00:00"
+  },
+  "news": {
+    "status": "ok",
+    "detail": "2/5 feeds ok | WSJ: feeds.a.dowjones.io is not in the environment's allowed domains; CNBC: search.cnbc.com is not in the environment's allowed domains",
+    "new_rows": 0,
+    "at": "2026-10-08T04:50:08+00:00"
+  }
+}

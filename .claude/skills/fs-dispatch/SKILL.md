@@ -36,6 +36,7 @@ Classify the request.
 | deal sourcing, CIM screening, diligence, unit economics, returns, IC memo, portfolio monitoring | `routes/private-equity.md` |
 | GL recon, breaks, accruals, roll-forwards, close, NAV, LP statements, valuation review | `routes/fund-admin.md` |
 | KYC onboarding packets, KYC/AML rules | `routes/kyc-operations.md` |
+| market and macro tracking: forward P/E and EPS, Treasury yields, inflation nowcast, Fed balance sheet, market headlines | the `market-watch` skill (not a router file) |
 | client meeting prep, client reports, prospect proposals | `routes/client-coverage.md` |
 
 More than one domain: read each router, then `reference/pipelines.md`.
