@@ -2,7 +2,9 @@
   "enabledPlugins": {
     "financial-analysis@claude-for-financial-services": true,
     "investment-banking@claude-for-financial-services": true,
-    "equity-research@claude-for-financial-services": true
+    "equity-research@claude-for-financial-services": true,
+    "private-equity@claude-for-financial-services": true,
+    "fund-admin@claude-for-financial-services": true
   },
   "extraKnownMarketplaces": {
     "claude-for-financial-services": {
