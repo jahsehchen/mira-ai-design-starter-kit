@@ -2,7 +2,7 @@
 
 Chains of leaves for the common multi-step jobs. Leaves are `plugin:skill`, abbreviated here: `fa` = `financial-analysis`, `ib` = `investment-banking`, `er` = `equity-research`, `pe` = `private-equity`, `fund` = `fund-admin`, `ops` = `operations`. **Expand to the full plugin name when calling the Skill tool** (`ib:teaser` -> `investment-banking:teaser`).
 
-Run each step, write its artifact to `out/`, pass the path to the next. Stops are mandatory.
+Run each step in the desk that owns its domain (`SKILL.md`: Domain -> desk), write its artifact to `out/`, pass the **path** to the next step. Independent branches run in parallel desks. Stops are mandatory, and a deliverable goes through `fs-reviewer` before it reaches the user.
 
 | # | Job | Chain | Stops / notes |
 |---|---|---|---|
