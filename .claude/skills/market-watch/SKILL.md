@@ -49,3 +49,19 @@ Replaced or dropped (each is listed with its reason in the report's status table
 - Fetch rarely (weekly or daily) with the honest user agent the script sends.
 - If a parser stops matching, it raises (`layout changed`) rather than guessing. Fix the parser, do not loosen it until it returns something.
 - The report describes indicators. It is not investment advice.
+
+## Operations (scheduled runs)
+
+Two cloud routines fire a prompt into one long-lived runner session. Times are UTC.
+
+| Item | Id | Schedule |
+|---|---|---|
+| Runner session "Market Watch Runner" (holds the repo clone and push access) | `session_01N6T9pGu5PC7idWjaFS3vMV` | n/a |
+| Routine "Market Watch Weekly" (full fetch, report, commentary) | `trig_016A9h8T8db9SbRUkJg5CD6D` | `57 21 * * 5` (Friday, after the US close) |
+| Routine "Market Watch News" (news fetch and digest) | `trig_01TKVHpqFPcNDHNBw2tx9HeM` | `59 21 * * 1-4` (Monday to Thursday) |
+
+- **Why a persistent runner.** A routine that starts a fresh session gets no repository and no `add_repo` tool (tested: it stopped at step 1). Routines must therefore target a session that already has the repo attached.
+- **Pause or stop:** `update_trigger` with `enabled=false`, or `delete_trigger`.
+- **If the runner session is gone:** `create_session` with `source_url` = this repo, `source_revision` and `outcome_branch` = the working branch, then recreate both routines with `persistent_session_id` pointing at it. Each run starts with `git pull --rebase`, so a fresh clone is fine.
+- **Runner context grows with every run.** If it gets large, replace it the same way.
+- A run that cannot push or reach any source stops and reports; it never invents data. Check the latest commit message and `data/market-watch/status.json` to see whether the last run worked.
