@@ -12,7 +12,7 @@ Three levels. Load only what the request needs.
 |---|---|---|
 | 0 | Triage, preflight, protocol, guardrails | this file |
 | 1 | Domain routers: intent -> leaf, chains, hand-offs | `routes/*.md` |
-| 2 | Leaves: plugin skills (`plugin:skill`) and agent playbooks | installed plugins; playbooks in `vendor/financial-services/plugins/agent-plugins/<slug>/agents/<slug>.md` |
+| 2 | Leaves: plugin skills (`plugin:skill`) and agent playbooks | enabled plugins; playbooks are files in `vendor/financial-services/plugins/agent-plugins/<slug>/agents/<slug>.md` (read from there; the agent plugin does not need to be enabled) |
 
 Shared references: `reference/capabilities.md` (what data and tools exist here), `reference/pipelines.md` (cross-domain chains), `reference/agent-playbooks.md` (how to run the 10 agents).
 
@@ -59,7 +59,7 @@ Everything here produces drafts, so there is nothing irreversible to confirm bef
 
 ## 4. Execute
 
-- **Call leaves by namespaced name** through the Skill tool: `financial-analysis:comps-analysis`. Always use the canonical copy in the vertical plugin. The agent plugins bundle same-named duplicates (`pitch-agent:comps-analysis` and so on); ignore those. The only agent-only skills are `meeting-prep-agent:client-review`, `:client-report`, `:investment-proposal`.
+- **Call leaves by namespaced name** through the Skill tool: `financial-analysis:comps-analysis`. Always use the canonical copy in the vertical plugin. Of the agent plugins only `meeting-prep-agent` is enabled (the other nine are disabled to avoid duplicate skills). It bundles a duplicate `pptx-author` (use `financial-analysis:pptx-author`) and three skills that exist nowhere else: `meeting-prep-agent:client-review`, `:client-report`, `:investment-proposal`.
 - **Agents run as playbooks** by default (see `reference/agent-playbooks.md`).
 - **Pass state explicitly** between steps: file paths in `out/`, named assumptions, open flags. Each step reads the previous artifact instead of relying on memory.
 - **Parallelize independent branches** (separate tickers, entities, or peer-set vs sector research) with subagents. Keep dependent steps sequential.

@@ -6,6 +6,8 @@ Each agent is an end-to-end workflow with a fixed order and review stops. Its de
 
 Read it before running; do not work from memory or from the summary below.
 
+**Plugin state.** Nine of the ten agent plugins are **disabled** in `.claude/settings.json` (they only add duplicate copies of skills that the vertical plugins already provide). Playbook mode reads the file from `vendor/`, so it works regardless. Only `meeting-prep-agent` is enabled, because it carries skills that exist nowhere else. To bring one back: `claude plugin enable <slug>@financial-services-local --scope project`, then restart the session.
+
 ## Modes
 
 **A. Playbook (default).** You, in the main session, follow the agent's *Workflow* and *Guardrails* literally.
@@ -16,7 +18,7 @@ Read it before running; do not work from memory or from the summary below.
 
 **B. Fan-out.** For N independent items (a coverage list, several entities or funds), start one `general-purpose` subagent per item, at most 5 at once. Each gets: the playbook path, the item, the substitutions, and where to write (`out/<job>-<item>-...`). Each returns file paths and its `[UNSOURCED]` / `[ASSUMPTION]` list. You merge and report. Do not fan out steps that depend on each other.
 
-**C. Delegate to the plugin agent** (`Agent` tool, `subagent_type: "<slug>:<slug>"`). Only after a small trial shows it can reach what it needs. If it cannot call skills or write files, fall back to A. Never build a flow that depends on C.
+**C. Delegate to the plugin agent** (`Agent` tool, `subagent_type: "<slug>:<slug>"`). Available only for `meeting-prep-agent` unless the others are re-enabled (see Plugin state). Only after a small trial shows it can reach what it needs. If it cannot call skills or write files, fall back to A. Never build a flow that depends on C.
 
 ## The ten agents
 
