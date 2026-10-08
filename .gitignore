@@ -45,9 +45,3 @@ temp/
 Thumbs.db
 .idea/
 .vscode/
-
-# Financial-services work product (deal, client and KYC data stays local)
-out/
-inputs/
-__pycache__/
-!data/market-watch/reports/
