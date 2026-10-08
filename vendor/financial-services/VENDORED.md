@@ -8,8 +8,11 @@ Used as the project plugin marketplace `financial-services-local`
 
 ## Local changes vs. upstream
 
-1. `plugins/vertical-plugins/financial-analysis/.mcp.json` — fixed invalid JSON
-   (missing comma after `egnyte`, unclosed `box` block); all 12 connectors now parse.
+1. `plugins/vertical-plugins/financial-analysis/.mcp.json` — emptied to `{"mcpServers": {}}`
+   (same as the other vertical plugins). Upstream shipped 12 data connectors in invalid JSON
+   (missing comma after `egnyte`, unclosed `box` block). We have no subscriptions, so they are removed
+   rather than repaired; data comes from user-provided files. To restore them, take the list from
+   `anthropics/financial-services` and fix the JSON.
 2. `.claude-plugin/marketplace.json` — marketplace renamed to `financial-services-local`
    (`claude-for-financial-services` is reserved for the official GitHub source), added a
    `description`, and removed the `claude-for-msft-365-install` entry (its name is reserved for

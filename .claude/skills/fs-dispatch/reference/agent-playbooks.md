@@ -26,10 +26,10 @@ Stops are where the playbook says to stop and hand back. "Needs" lists dependenc
 
 | Agent | Use for | Not for -> use | Core order | Needs / substitute | Stops after |
 |---|---|---|---|---|---|
-| `pitch-agent` | first-draft pitch on a named company | edit existing deck -> `investment-banking:pitch-deck` | sector-overview, comps-analysis, lbo-model, dcf-model + 3-statement-model, audit-xls, football field, pitch-deck, ib-check-deck | capiq -> `sp-global` / `factset` / user files; PPT template path from user | Excel model; deck |
-| `model-builder` | clean DCF / LBO / 3-statement / comps from scratch | update a coverage model -> `earnings-reviewer` | matching model skill, audit-xls, sensitivities | capiq / daloopa -> user files or filings | build; audit |
-| `earnings-reviewer` | a covered name just reported | sector primer -> `market-researcher` | earnings-analysis, model-update, audit-xls, morning-note | factset / daloopa down -> filings, transcript, user model | note and model staged |
-| `market-researcher` | sector or theme primer with peer comps and ideas | single-name update -> `earnings-reviewer` | sector-overview, competitive-analysis, comps-analysis, idea-generation | capiq / factset -> user peer data or filings | comps spread; note |
+| `pitch-agent` | first-draft pitch on a named company | edit existing deck -> `investment-banking:pitch-deck` | sector-overview, comps-analysis, lbo-model, dcf-model + 3-statement-model, audit-xls, football field, pitch-deck, ib-check-deck | capiq absent -> user files; PPT template path from user | Excel model; deck |
+| `model-builder` | clean DCF / LBO / 3-statement / comps from scratch | update a coverage model -> `earnings-reviewer` | matching model skill, audit-xls, sensitivities | capiq / daloopa absent -> user files | build; audit |
+| `earnings-reviewer` | a covered name just reported | sector primer -> `market-researcher` | earnings-analysis, model-update, audit-xls, morning-note | factset / daloopa absent -> user-supplied filings, transcript, model | note and model staged |
+| `market-researcher` | sector or theme primer with peer comps and ideas | single-name update -> `earnings-reviewer` | sector-overview, competitive-analysis, comps-analysis, idea-generation | capiq / factset absent -> user peer data | comps spread; note |
 | `meeting-prep-agent` | briefing pack before a client meeting | | client-review, client-report | crm, capiq absent -> user notes and holdings | pack staged for advisor |
 | `valuation-reviewer` | quarter-end review of GP valuation packages | deal underwriting -> `model-builder` | returns-analysis, portfolio-monitoring, waterfall, LP pack | portfolio absent -> user GP packages (untrusted) | LP pack staged for IR |
 | `gl-reconciler` | daily or month-end GL vs subledger | posting entries -> `month-end-closer` | gl-recon, break-trace, independent re-verify, exception report | internal-gl, subledger absent -> user extracts | exception report |

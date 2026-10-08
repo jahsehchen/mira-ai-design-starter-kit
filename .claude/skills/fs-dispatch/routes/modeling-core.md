@@ -33,4 +33,4 @@ Support leaves used by other skills, not entry points: `financial-analysis:xlsx-
 ## Gotchas
 
 - Every calculation cell is a formula; inputs are blue, formulas black, cross-sheet links green; include a Checks tab.
-- Without a live data connector, inputs come from user files or filings and carry `[UNSOURCED]` or `[ASSUMPTION]`.
+- No data connectors are configured: inputs come from the user's files; anything else carries `[UNSOURCED]` or `[ASSUMPTION]`.
